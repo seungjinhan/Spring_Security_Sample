@@ -16,7 +16,7 @@ import com.deepplin.domain.AccountVo;
 @Controller
 public class LoginController {
 
-	@GetMapping("/login")
+	@GetMapping( value = {"/login", "/api/login"})
 	public String login( 
 			@RequestParam( value = "error", required = false) String error,
 			@RequestParam( value = "exception", required = false) String exception,
@@ -44,7 +44,7 @@ public class LoginController {
 	}
 	
 	
-	@GetMapping("/denied")
+	@GetMapping( value = {"/denied" , "/api/denied"})
 	public String accessDenied(
 			@RequestParam( value = "exception", required = false) String exception, Model model) {
 		
