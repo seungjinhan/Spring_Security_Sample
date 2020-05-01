@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,11 +16,13 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.deepplin.security.common.FormWebAuthenticationDetailsSource;
-import com.deepplin.security.handler.CustomAccessDeniedHandler;
-import com.deepplin.security.handler.CustomAuthenticationFailureHandler;
-import com.deepplin.security.handler.CustomAuthenticationSuccessHandler;
+import com.deepplin.security.filter.AjaxLoginProcessingFilter;
+import com.deepplin.security.handler.form.CustomAccessDeniedHandler;
+import com.deepplin.security.handler.form.CustomAuthenticationFailureHandler;
+import com.deepplin.security.handler.form.CustomAuthenticationSuccessHandler;
 import com.deepplin.security.provider.FormAuthenticationProvider;
 
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 @Configuration
 @EnableWebSecurity
 @Slf4j
+@Order(1)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
@@ -54,11 +59,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public AuthenticationProvider authenticationProvider() {
 		return new FormAuthenticationProvider();
 	}
-	
+		
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		
 		auth.authenticationProvider( authenticationProvider());
+		
 		//auth.userDetailsService(userDetailService);
 		
 //		String pw = this.passwordEncoder().encode("1234");
@@ -95,6 +101,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.and()
 				.exceptionHandling()
 				.accessDeniedHandler( this.accessDeniedHandler());
+
 	}
 	
 	@Override
